@@ -12,16 +12,16 @@ exports.createProduct = catchAsyncError(async(req, res, next) => {
 });
 
 //GET ALL PRODUCTS
-exports.getAllProducts = async(req, res) => {
+exports.getAllProducts = catchAsyncError(async(req, res) => {
   const products = await Product.find();
   res.status(200).json({
     success: true,
     products
   })
-}
+})
 
 // get product details
-exports.getProductDetails = async(req, res, next) => {
+exports.getProductDetails = catchAsyncError(async(req, res, next) => {
   let product = await Product.findById(req.params.id);
 
   if (!product) {
@@ -33,10 +33,10 @@ exports.getProductDetails = async(req, res, next) => {
     product
   })
 
-}
+})
 
 //UPDATE PRODUCT --ADMIN 
-exports.updateProduct = async(req, res) => {
+exports.updateProduct =catchAsyncError( async(req, res) => {
   let product = await Product.findById(req.params.id);
 
   if (!product) {
@@ -53,11 +53,11 @@ exports.updateProduct = async(req, res) => {
     success: true,
     product
   })
-}
+})
 
 //delete product
 
-exports.deleteProduct = async(req, res, next) => {
+exports.deleteProduct =catchAsyncError( async(req, res, next) => {
   const product = await Product.findById(req.params.id);
 
   if (!product) {
@@ -69,4 +69,4 @@ exports.deleteProduct = async(req, res, next) => {
     success: true,
     message: 'Product deleted successfully'
   })
-}
+})
