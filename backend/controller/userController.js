@@ -109,3 +109,83 @@ exports.resetPassword = catchAsyncError(async(req, res, next)=>{
   sendToken(user, 200, res);
 })
 
+//get User Details
+ exports.getUserDetails = catchAsyncError(async (req, res, next)=>{
+  const user = await User.findById(req.user.id)
+
+  res.status(200).json({
+    success: true,
+    user
+  });
+ });
+
+
+ //change password
+ exports.updatePassword = catchAsyncError(async(req, res, next)=>{
+  const user = await User.findById(req.user.id).select("+password");
+  const isPasswordMatched = await user.comparePassword(req.body.oldPassword);
+
+  if(!isPasswordMatched){
+    return next(new ErrorHandler('Old password is incorrect', 400));
+  }
+
+  if(req.body.confirmPassword !== req.body.newPassword){
+    return next(new ErrorHandler('password does not matched', 400));
+  }
+
+  user.password = req.body.newPassword;
+  user.save();
+
+  sendToken(user, 200, res);
+ })//get User Details
+ exports.getUserDetails = catchAsyncError(async (req, res, next)=>{
+  const user = await User.findById(req.user.id)
+
+  res.status(200).json({
+    success: true,
+    user
+  });
+ });
+
+
+exports.updateProfile = catchAsyncError(async(req, res, next)=>{
+  const newUserData = {
+    name:req.body.name,
+    email: req.body.email
+  };
+
+  const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  });
+
+  res.status(200).json({
+    success: true
+  })
+})
+
+
+//get User Details(admin)
+exports.getAllUsers = catchAsyncError(async (req, res, next)=>{
+  const users = await User.find({});
+  console.log({users})
+  res.status(200).json({
+    success: true,
+    users
+  });
+ });
+
+
+ //get Single User Details(admin)
+ exports.getSingleUserDetails = catchAsyncError(async (req, res, next)=>{
+  const user = await User.findById(req.user.id)
+
+  if(!user){
+    return next(new ErrorHandler('User does not exist with ID'+ req.user.id , 400));
+  }
+  res.status(200).json({
+    success: true,
+    user
+  });
+ });
