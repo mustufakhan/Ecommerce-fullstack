@@ -1,8 +1,11 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { Products } from "./Products";
 import './Home.css'
-
+import MetaData from "../layout/MetaData";
+import {getProduct} from '../../actions/productAction';
+import {useDispatch, useSelector} from 'react-redux'
 const Home = () =>{
+	const dispatch = useDispatch();
 
 	const product = {
 		name: "njsd",
@@ -11,8 +14,12 @@ const Home = () =>{
 		_id: "ksmkd"
 	};
 
+	useEffect(()=>{
+		dispatch(getProduct)
+	},[dispatch])
 	return(
 		<Fragment>
+			<MetaData title="Ecommerce"/>
 			<div className="banner">
 				<p>Welcome to Ecommerce</p>
 				<h1>FIND AMAZING PRODUCTS BELOW</h1>
